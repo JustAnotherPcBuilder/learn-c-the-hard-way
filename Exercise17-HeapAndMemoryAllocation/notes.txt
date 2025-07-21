@@ -1,0 +1,19 @@
+Initial creation of this database file is:
+103200 bytes
+
+4B
+4B
+512B
+512B
+1 struct = 1032B
+
+database = 100*struct size = 103200B
+
+1024+8 = 1032 *100 = 103200
+
+1 struct = 24B
+24B * 100 = 2400B 
+
+512*2*100
+102400
+2400

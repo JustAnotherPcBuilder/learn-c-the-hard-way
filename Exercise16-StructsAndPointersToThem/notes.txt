@@ -1,0 +1,22 @@
+stdio.h
+    contains various i/o functions, mainly for printing and getting user io (getchar, putchar, printf, scanf, fprintf, etc)
+assert.h
+    used for assert and static_assert macros. Used at compile time to debug and check whether assertions are good.
+stdlib.h
+    various misc functions. malloc, realloc, free
+string.h
+    various string functions for string operations, such as strcpy, memset, 
+
+
+free()
+    printing after freeing caused the location to be NULL.
+
+assert(var != NULL) 
+    when var is NULL:
+    Assertion failed: (var != NULL), function ..., file..., line NN.
+    abort trap: 6
+
+    abort trap:6 
+        this is a signal (6) sent by assert that crashes tells the os to terminate the program 
+
+debugger
