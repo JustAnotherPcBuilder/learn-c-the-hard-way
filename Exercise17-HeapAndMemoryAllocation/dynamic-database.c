@@ -1,4 +1,4 @@
-#include "functions.c"
+#include "dynamic-functions.c"
 
 
 int main(int argc, char* argv[]){
@@ -11,9 +11,10 @@ int main(int argc, char* argv[]){
     int id = 0;
 
     if(argc > 3) id = atoi(argv[3]);
-        
+    char buf[1000];
+    sprintf(buf, "There's not that many records{%s}.", argv[3]);
     if(id >= MAX_ROWS)
-        die("There's not that many records", conn);
+        die(buf , conn);
     
     switch(action){
         case 'c':
@@ -41,6 +42,21 @@ int main(int argc, char* argv[]){
             break;
         case 'l':
             Database_list(conn);
+            break;
+        
+        case 'D':
+            if (argc != 4)
+                die("Need MAX_DATA to set", conn);
+            char *endptr = NULL;
+            int max_data = (int) strtol(argv[3], &endptr, 10);
+            if(*endptr != '\0' || max_data == 0){
+                die("Invalid input for MAX_DATA!", conn);
+                return EXIT_FAILURE;
+            }
+            printf("New MAX_DATA: %d\n", max_data);
+            break;
+
+        case 'R':
             break;
         default:
             die("Invalid action: c=create, g=get, s=set, d=del, l=list", conn);
