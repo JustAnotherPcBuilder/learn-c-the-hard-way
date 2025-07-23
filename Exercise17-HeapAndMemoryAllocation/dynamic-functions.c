@@ -365,14 +365,16 @@ void Database_resize_data(struct Connection *conn, int data){
         if(!addr->name)
             db_abort("ERROR re-allocating Address name string!", conn);
         addr->name[data - 1] = '\0';
-        addr->name_len = strlen(addr->name) + 1;
+        if(addr->name_len > data)
+            addr->name_len = data;
         
         // Reallocate email
         addr->email = realloc(addr->email, data);
         if(!addr->email)
             db_abort("ERROR re-allocating Address name string!", conn);
         addr->email[data - 1] = '\0';
-        addr->email_len = strlen(addr->name) + 1;
+        if(addr->email_len > data)
+            addr->email_len = data;
 
     }
 }
