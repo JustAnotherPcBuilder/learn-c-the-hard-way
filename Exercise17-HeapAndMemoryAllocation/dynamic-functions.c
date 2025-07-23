@@ -328,7 +328,16 @@ void Database_list(struct Connection *conn){
  * @param rows New value to resize the database rows array to.
  */
 void Database_resize_rows(struct Connection *conn, int rows){
-
+    if(rows < 1)
+        db_abort("Invalid Rows resize value!", conn);
+    if(conn->db->end_row > rows)
+        db_abort("Cannot resize Rows to a value less than currently filled row! "
+                    "Delete any Addresses outside your desired new row value "
+                    "before resizing!", conn);
+    conn->db->max_rows = rows;
+    conn->db->rows = realloc(conn->db->rows, sizeof(struct Address) * rows);
+    if(!conn->db->rows)
+        db_abort("ERROR re-allocating Database rows!", conn);
 }
 
 /**
@@ -342,6 +351,28 @@ void Database_resize_rows(struct Connection *conn, int rows){
  * @param data New value to resize the database max_data value to.
  */
 void Database_resize_data(struct Connection *conn, int data){
-    // TODO
+    if(data < 2)
+        db_abort("Invalid data resize value!", conn);
+    conn->db->max_data = data;
+    struct Address *addr;
+    for(int i = 0; i < conn->db->max_rows; i++){
+        addr = &conn->db->rows[i];
+        if(!addr->set)
+            continue;
 
+        // Reallocate name
+        addr->name = realloc(addr->name, data);
+        if(!addr->name)
+            db_abort("ERROR re-allocating Address name string!", conn);
+        addr->name[data - 1] = '\0';
+        addr->name_len = strlen(addr->name) + 1;
+        
+        // Reallocate email
+        addr->email = realloc(addr->email, data);
+        if(!addr->email)
+            db_abort("ERROR re-allocating Address name string!", conn);
+        addr->email[data - 1] = '\0';
+        addr->email_len = strlen(addr->name) + 1;
+
+    }
 }
