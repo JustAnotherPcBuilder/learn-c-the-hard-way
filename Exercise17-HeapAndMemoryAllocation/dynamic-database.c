@@ -55,6 +55,7 @@ int main(int argc, char* argv[]){
                 db_abort("Need MAX_DATA to set", conn);
             int data = atoi(argv[3]);
             Database_resize_data(conn, data);
+            Database_write(conn);
             break;
 
         case 'R':
@@ -62,6 +63,7 @@ int main(int argc, char* argv[]){
                 db_abort("Need MAX_ROWS to set", conn);
             int rows = atoi(argv[3]);
             Database_resize_rows(conn, rows);
+            Database_write(conn);
             break;
         default:
             db_abort("Invalid action: c=create, g=get, s=set, d=del, l=list", conn);

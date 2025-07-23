@@ -101,21 +101,21 @@ void Database_load(struct Connection *conn){
         db_abort("ERROR allocating memory for Database Rows.", conn);
     
     // Loads all addresses. Allocates memory and loads string data on set addrs
-    struct Address addr;
+    struct Address *addr;
     for(int i = 0; i < conn->db->max_rows; i++){
-        addr = conn->db->rows[i];
-        rc = fread(&addr, sizeof(struct Address), 1, conn->file);
+        addr = &conn->db->rows[i];
+        rc = fread(addr, sizeof(struct Address), 1, conn->file);
         if (rc != 1)
             db_abort("Failed to load database.", conn);
-        if (addr.set){
-            addr.email = malloc(addr.email_len + 1);
-            addr.name = malloc(addr.name_len + 1);
-            if(!addr.email || !addr.name)
+        if (addr->set){
+            addr->email = malloc(addr->email_len);
+            addr->name = malloc(addr->name_len);
+            if(!addr->email || !addr->name)
                 db_abort("Error allocating memory for Address Strings.", conn);
-            rc = fread(addr.name, sizeof(addr.name_len + 1), 1, conn->file);
+            rc = fread(addr->name, addr->name_len, 1, conn->file);
             if (rc != 1)
                 db_abort("Failed to load database.", conn);
-            rc = fread(addr.email, sizeof(addr.email_len + 1), 1, conn->file);
+            rc = fread(addr->email, addr->email_len, 1, conn->file);
             if (rc != 1)
                 db_abort("Failed to load database.", conn);
         }
@@ -145,14 +145,6 @@ struct Connection *Database_open(const char *filename, char mode){
         db_abort("Memory error", conn);
     
         if(mode == 'c'){
-            // Initialize database data
-            conn->db->max_data = MAX_DATA;
-            conn->db->max_rows = MAX_ROWS;
-            conn->db->end_row = 0;
-            conn->db->rows = malloc(sizeof(struct Address) * MAX_ROWS);
-            if (!conn->db->rows)
-                db_abort("ERROR! Could not allocate memory for rows!", conn);
-
             conn->file = fopen(filename, "w");
         }else{
             conn->file = fopen(filename, "r+");
@@ -210,6 +202,14 @@ void Database_write(struct Connection *conn){
  * @param conn Pointer to Connection struct holding file and database data.
  */
 void Database_create(struct Connection *conn){
+    // Initialize database data
+    conn->db->max_data = MAX_DATA;
+    conn->db->max_rows = MAX_ROWS;
+    conn->db->end_row = 0;
+    conn->db->rows = malloc(sizeof(struct Address) * MAX_ROWS);
+    if (!conn->db->rows)
+        db_abort("ERROR! Could not allocate memory for rows!", conn);
+    
     for(int i =0; i< conn->db->max_rows; i++){
         // struct Address is {id, set, name, email, name_len, email_len}
         conn->db->rows[i] = (struct Address) { i, 0, NULL, NULL, 0, 0};
@@ -227,7 +227,7 @@ void Database_create(struct Connection *conn){
  * @param email     String data containing the Email information
  */
 void Database_set(struct Connection *conn, int id, const char *name, const char *email){
-    if(id >= conn->db->max_rows|| id < 1)
+    if(id >= conn->db->max_rows|| id < 0)
         db_abort("Invalid id!", conn);
     struct Address *addr = &conn->db->rows[id];
     
@@ -255,6 +255,8 @@ void Database_set(struct Connection *conn, int id, const char *name, const char 
     addr->email_len = strlen(addr->email) + 1;
     
     addr->set = 1;
+    if(conn->db->end_row < id)
+        conn->db->end_row = id;
 }
 
 /**
@@ -293,6 +295,12 @@ void Database_delete(struct Connection *conn, int id){
     free(conn->db->rows[id].name);
     
     conn->db->rows[id] = (struct Address) {id, 0, NULL, NULL, 0, 0};
+    if(conn->db->end_row == id){
+        for(int i = 0; i < conn->db->max_rows; i++){
+            if(conn->db->rows[i].set)
+                conn->db->end_row = i;
+        }
+    }
     
 }
 
@@ -307,7 +315,7 @@ void Database_delete(struct Connection *conn, int id){
 void Database_list(struct Connection *conn){
     int i = 0;
     struct Database *db = conn->db;
-    for(i = 0; i < MAX_ROWS; i++){
+    for(i = 0; i < conn->db->max_rows; i++){
         struct Address *cur = &db->rows[i];
 
         if(cur->set){
@@ -334,10 +342,17 @@ void Database_resize_rows(struct Connection *conn, int rows){
         db_abort("Cannot resize Rows to a value less than currently filled row! "
                     "Delete any Addresses outside your desired new row value "
                     "before resizing!", conn);
-    conn->db->max_rows = rows;
+    
     conn->db->rows = realloc(conn->db->rows, sizeof(struct Address) * rows);
     if(!conn->db->rows)
         db_abort("ERROR re-allocating Database rows!", conn);
+    if(rows > conn->db->max_rows){
+        for(int i = conn->db->max_rows; i < rows; i++){
+            conn->db->rows[i] = (struct Address){i, 0, NULL, NULL, 0, 0};
+        }
+    }
+    conn->db->max_rows = rows;
+    
 }
 
 /**
