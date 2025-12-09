@@ -1,0 +1,25 @@
+You can use a pointer to point to a function. This is used mainly to get object/class like behavior.
+
+//Normal Function
+int add(int a, int b){
+    return a + b;
+}
+
+//Pointer Function
+int (* add_pointer_function)(int a, int b) = add
+
+//add(4,5) is the same as add_pointer_function(4,5)
+
+
+To pass the pointer function, use typedef
+
+typedef int (*compare_cb) (int a, int b);
+
+int *bubble_sort(int *numbers, int count, compare_cb cmp)
+{
+    //some code here
+    //use cmp as the compare function....
+    //you can use multiple compare functions to change the sorting 
+    //i.e. sorted_order, reverse_order, etc.
+}
+
