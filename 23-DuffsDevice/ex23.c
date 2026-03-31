@@ -52,7 +52,8 @@ int zeds_device(char *from, char *to, int count)
         switch (count % 8)
         {
             case 0:
-again:      *to++ = *from++;
+            again: 
+            *to++ = *from++;
             case 7:
             *to++ = *from++;
             case 6:

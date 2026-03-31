@@ -1,0 +1,15 @@
+How to Break It
+For this exercise, try to access or change some things you can’t to break the program.
+• Try to directly access variables in ex22.c from ex22_main.c that you think you can’t
+access. For example, can you get at ratio inside update_ratio? What if you had a
+pointer to it?
+• Ditch the extern declaration in ex22.h to see what errors or warnings you get.
+• Add static or const specifiers to different variables, and then try to change them.
+
+Extra Credit
+• Research the concept of pass by value versus pass by reference. Write an example of both.
+• Use pointers to gain access to things you shouldn’t have access to.
+• Use your debugger to see what this kind of access looks like when you do it wrong.
+• Write a recursive function that causes a stack overflow. Don’t know what a recursive
+function is? Try calling scope_demo at the bottom of scope_demo itself so that it loops.
+• Rewrite the Makefile so that it can build this.

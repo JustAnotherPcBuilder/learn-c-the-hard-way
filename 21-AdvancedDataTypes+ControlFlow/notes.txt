@@ -1,0 +1,112 @@
+Datatypes
+int
+double
+float
+char
+void
+enum
+
+Type Modifiers
+unsigned
+signed
+long
+short
+const
+volatile
+register
+
+Type conversion
+
+Type Sizes
+int8_t
+uint8_t
+int16_t
+uint16_t
+int32_t
+uint32_t
+int64_t
+uint64_t
+
+INT{X}_MAX
+INT{X}_MIN
+UINT{X}_MAX
+UINT{X}_MIN
+
+Operators
+binary operators contain 2 operands (x + y)
+unary  |operators contain a single operand (!x)
+prefix operators come before the variable (++x)
+postfix operators come after the variable (x++)
+ternary operators have 3 operands ( x ? y : z)
+
+ ----------------------------------------------------------
+|       Math Operators                                     |
+ ----------------------------------------------------------
+|  ()    |         | function call                         |
+|  *     | binary  | Multiply                              |
+|  /     | binary  | Divide                                |
+|  %     | binary  | Modulus                               |
+|  +     | binary  | Add                                   |
+|  +     | unary   | Positive Number                       |
+|  ++    | postfix | Read variable first, then increment   |
+|  ++    | prefix  | Increment variable first, then read   |
+|  --    | postfix | Read variable first, then decrement   |
+|  --    | prefix  | Decrement variable first, then read   |
+|  -     | binary  | Subtract                              |
+|  -     | unary   | Negative                              |
+|  ->    | binary  | Struct pointer access                 |
+|  .     | binary  | Struct value access                   |
+|  []    | unary   | Array index                           |
+|  &     | unary   | Address of                            |
+|  *     | unary   | Value of (from pointer location)      |
+| sizeof |         | Size of a type or variable            |
+ ----------------------------------------------------------
+
+Logic Operators
+!= - Does not equal
+< - Less than
+<= Less than or equal
+== Equal to (not assignment)
+> - Greater than
+>= - Greater than or equal
+
+Bit Operations
+<< - shift left
+>> - Shift right
+^ Bitwise Xor (Exclusive OR)
+| - Bitwise Or
+~ - Complement (Bit Inversion)
+
+Boolean Operators
+! - Not
+&& - And
+|| - Or
+?: - Ternary (x ? y : z reads "if x then y else z")
+
+ ----------------------------------------
+|       Assignment Operators             |
+ ----------------------------------------
+| =   | Assign                           |
+| %=  | Modulus and Assign               |
+| &=  | Bitwise And and Assign           |
+| *=  | Bitwise Multiply and Assign      |
+| +=  | Add and Assign                   |
+| -=  | Subtract and Assign              |
+| /=  | Divide and Assign                |
+| <<= | Bitwise Left Shift and Assign    |
+| >>= | Bitwise Right Shift and Assign   |
+| ^=  | Bitwise XOR and Assign           |
+| |=  | Bitwise OR and Assign            |
+ ---------------------------------------- 
+
+ 
+ ---------------------------------------- 
+ Control Structures
+ ---------------------------------------- 
+ if-else
+ while
+ do-while
+ break
+ continue
+ goto
+ ---------------------------------------- 
