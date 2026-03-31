@@ -1,0 +1,33 @@
+The I/O Functions
+This is a short list of various I/O functions that you should look up. Create flash cards that have the
+function name and all the variants similar to it.
+• fscanf
+• fgets
+• fopen
+• freopen
+• fdopen
+• fclose
+From the Library of Pankaj R Doharey
+130 LEARN C THE HARD WAY
+• fcloseall
+• fgetpos
+• fseek
+• ftell
+• rewind
+• fprintf
+• fwrite
+• fread
+Go through these and memorize the different variants and what they do. For example, for the
+card fscanf, you’ll have scanf, sscanf, vscanf, etc., and then what each of those does on the
+back.
+Finally, use man to read the help for each variant to get the information you need for the flash
+cards. For example, the page for fscanf comes from man fscanf.
+Extra Credit
+• Rewrite this to not use fscanf at all. You’ll need to use functions like atoi to convert
+the input strings to numbers.
+• Change this to use plain scanf instead of fscanf to see what the difference is.
+• Fix it so that their input names get stripped of the trailing newline characters and any
+white space.
+• Use scanf to write a function that reads one character at a time and fills in the names
+but doesn’t go past the end. Make this function generic so it can take a size for the string,
+but just make sure you end the string with '\0' no matter what.
