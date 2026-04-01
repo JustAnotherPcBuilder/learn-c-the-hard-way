@@ -44,6 +44,25 @@ int duffs_device(char*from, char*to, int count)
     return count;
 }
 
+int wiki_device(register short* from, register short* to, register int count)
+{
+    {
+        register int n = (count + 7) / 8;
+        switch (count % 8){
+            case 0: do{      *to = *from++;
+                case 7:      *to = *from++;
+                case 6:      *to = *from++;
+                case 5:      *to = *from++;
+                case 4:      *to = *from++;
+                case 3:      *to = *from++;
+                case 2:      *to = *from++;
+                case 1:      *to = *from++;
+            }while (--n > 0);
+        }
+    }
+    return count;
+}
+
 int zeds_device(char *from, char *to, int count)
 {
     {
@@ -119,6 +138,15 @@ int main(int argc, char*argv[])
     rc = zeds_device(from, to, 1000);
     check(rc = 1000, "Zed's device failed: %d", rc);
     check(valid_copy(to, 1000, 'x'), "Zed's device failed copy.");
+
+    // reset
+    memset(to, 'y', 1000);
+
+    // Wiki's version
+    rc = wiki_device((short*)from, (short *)to, 1000);
+    check(rc = 1000, "Wiki's device failed: %d", rc);
+    check(valid_copy(to, 1000, 'x'), "Wiki's device failed copy.");
+    
 
     return 0;
 

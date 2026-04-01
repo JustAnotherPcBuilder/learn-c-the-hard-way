@@ -3,9 +3,19 @@ Extra Credit
 • Go look at the Wikipedia entry for Duff’s device and see if you can spot the error. Read the
 article, compare it to the version I have here, and try to understand why the Wikipedia
 code won’t work for you but worked for Tom Duff.
+
+    Duffs Device uses this expression to copy:
+        *to = *from++;
+    Zed's Device uses:
+        *to++ = *from++;
+
+    Zed's device moves both pointers so that the copy can be done appropriately.
+
+
 • Create a set of macros that lets you create any length of device like this. For example,
 what if you wanted to have 32 case statements and didn’t want to write out all of them?
 Can you do a macro that lays down eight at a time?
+
 • Change the main to conduct some speed tests to see which one is really the fastest.
 • Read about memcpy, memmove, and memset, and also compare their speed.
 • Never use this again!
