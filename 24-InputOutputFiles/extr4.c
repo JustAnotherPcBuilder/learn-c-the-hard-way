@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include "dbg.h"
+#include <string.h>
 
 #define MAX_DATA 100
 
@@ -24,6 +25,21 @@ typedef struct Person {
     float income;
 } Person;
 
+char *read_1_char_at_a_time(char *buffer, int size){
+    char ch;
+    int len = 0;
+    // guarantees all elements are null char; no need to set the end to null
+    memset(buffer, '\0', size); 
+
+    // Keep reading until either end of file or buffer is reached
+    while ( scanf("%c", &ch) != EOF && len < size - 1 && ch != '\n'){
+        buffer[len] = ch;
+        len++;
+    }
+    if (len > 0) return buffer;
+    return NULL;
+}
+
 int main (int argc, char *argv[])
 {
     Person you = {.age = 0};
@@ -31,11 +47,13 @@ int main (int argc, char *argv[])
     char *in = NULL;
 
     printf("What's your First Name? ");
-    in = fgets(you.first_name, MAX_DATA - 1, stdin);
+    // in = fgets(you.first_name, MAX_DATA - 1, stdin);
+    in = read_1_char_at_a_time(you.first_name, MAX_DATA);
     check(in != NULL, "Failed to read first name.");
 
     printf("What's your Last Name? ");
-    in = fgets(you.last_name, MAX_DATA - 1, stdin);
+    // in = fgets(you.last_name, MAX_DATA - 1, stdin);
+    in = read_1_char_at_a_time(you.last_name, MAX_DATA);
     check(in != NULL, "Failed to read last name.");
     printf("How old are you? ");
     int rc= fscanf(stdin, "%d", &you.age);

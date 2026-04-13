@@ -23,6 +23,26 @@ typedef struct Person {
     float income;
 } Person;
 
+void remove_whitespace_newline(char *str){
+    int len = (int) strlen(str);
+    if (len < 1) return;
+    for(int i = len - 1; i >= 0; i--){
+        switch(str[i]){
+            case ' ':
+                str[i] = '\0';
+                break;
+            case '\n':
+                str[i] = '\0';           
+                break;
+            case '\0':
+                break;
+            default:
+                //terminate for-loop
+                i = 0;
+                break;
+        }
+    }
+}
 int main (int argc, char *argv[])
 {
     Person you = {.age = 0};
@@ -32,10 +52,13 @@ int main (int argc, char *argv[])
     printf("What's your First Name? ");
     in = fgets(you.first_name, MAX_DATA - 1, stdin);
     check(in != NULL, "Failed to read first name.");
+    remove_whitespace_newline(you.first_name);
 
     printf("What's your Last Name? ");
     in = fgets(you.last_name, MAX_DATA - 1, stdin);
     check(in != NULL, "Failed to read last name.");
+    remove_whitespace_newline(you.last_name);
+
     printf("How old are you? ");
     int rc= fscanf(stdin, "%d", &you.age);
     check(rc > 0, "You have to enter a number.");
@@ -60,8 +83,8 @@ int main (int argc, char *argv[])
 
     printf("----- RESULTS -----\n");
 
-    printf("First Name: %s", you.first_name);
-    printf("Last Name: %s", you.last_name);
+    printf("First Name: %s\n", you.first_name);
+    printf("Last Name: %s\n", you.last_name);
     printf("Age: %d\n", you.age);
     printf("Eyes: %s\n", EYE_COLOR_NAMES[you.eyes]);
     printf("Income: %f\n", you.income);
