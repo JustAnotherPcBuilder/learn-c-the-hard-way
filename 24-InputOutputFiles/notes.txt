@@ -52,24 +52,197 @@ function name and all the variants similar to it.
                 open
 
 • freopen
+    #include <stdio.h>
+    FILE *freopen(const char *restrict pathname, const char *restrict mode, FILE *restrict stream);
+    @description
+        opens file @ pathname and associates stream.
+        if stream is already opened, closes stream and uses provided mode
+        if pathname is NULL, reopens the stream with provided mode
+        mode is same as fopen
+    @return 
+        returns FILE pointer or NULL if failed
+    @errors
+        EINVAL
+            invalid mode provided
+            same errors as:
+                open
+                fclose
+                fflush
 • fdopen
+    #include <stdio.h>
+    FILE *fdopen(int fd, const char *mode);
+    @description
+        assigns a stream to an existing fd with a mode
+        *mode for fd must be compatible with mode of stream
+    @return
+        returns stream upon success
+        returns NULL if error
+    @errors
+        EINVAL
+            provided mode invalid
+        same errors from:
+            routine
+            fcntl
 • fclose
+    #include <stdio.h>
+    int fclose(FILE *stream);
+    @description
+        flushes stream and closes associated fd
+    @return
+        0 if successful
+        EOF if error
+    @errors
+        EBADF
+            fd underlying stream is invalid
+        same as:
+            close
+            write
+            fflush
+
 • fcloseall
+    #define _GNU_SOURCE // Not part of standard lib (gnu extension)
+    #include <stdio.h>
+    int fclaseall(void);
+    @description
+        closes all calling process's opene streams
+    @return 
+        0 if successful
+        EOF otherwise
+    @errors
+        any errors from:
+            fclose
+            fflush
+            close
+
 • fgetpos
+    #include <stdio.h>
+    int fgetpos(FILE *restrict, fpos_t *restrict pos);
+    @description
+        similar to ftell; gives file position value indicator
+    @return 
+        0 if successful
+        -1 if invalid
+    @errors
+        ESPIPE
+            stream is not seekable (pipe, FIFO, or socket)
+        same as:
+            fflush
+            fstat
+            lseek
+            malloc
+
 • fseek
+    #include <stdio.h>
+    int fseek(FILE *stream, long offset, int whence);
+    @description
+        sets file position indicator of stream
+        adds offset bytes to location of whence
+        whence can be:
+            SEEK_SET
+                start of file
+            SEEK_CUR
+                current position
+            SEEK_END
+                end of file
+    @return 
+        0 if successful
+        -1 if invalid
+    @errors
+        EINVAL
+            whence was not SEEK_SET, SEEK_END, or SEEK_CUR
+        ESPIPE
+            stream is not seekable (pipe, FIFO, or socket)
+        same as:
+            fflush
+            fstat
+            lseek
+            malloc
+
 • ftell
+    #include <stdio.h>
+    long ftell(FILE *stream);
+    @description
+    
+    @return
+        current offset
+        -1 if fail
+    
+    @errors
+        ESPIPE
+            stream is not seekable (pipe, FIFO, or socket)
+        same as:
+            fflush
+            fstat
+            lseek
+            malloc
+
 • rewind
+    #include <stdio.h>
+    void rewind(FILE *stream);
+    @description
+        sets the file position of stream to the beginning of the file
+        equivalent to fseek(stream, 0L, SEEK_SET)
+    @return
+        NA (void)
+    @errors
+        same as:
+            fseek
+
 • fprintf
+    #include <stdio.h>
+    int fprintf(FILE *restrict stream, const char *restrict format, ...);
+    @description
+        writes output to the provided stream
+    @return 
+        the number of bytes printed, included terminating null byte
+        -1 if failed
+    @errors
+        check stream state for errors (
+            if ferror(stream){}
+    
 • fwrite
+    #include <stdio.h>
+    size_t fwrite(const void ptr[restrict .size * .nmemb], size_t size, size_t nmemb, FILE *restrict stream);
+    @description
+        writes nmemb items of data, size bytes long, to stream, obtaining from ptr
+    @return 
+        number of items written (num of bytes only when size is 1)
+        0 or short item ount when error/EOF is reached
+    @errors
+
 • fread
+    #include <stdio.h>
+    size_f fread(void ptr[restrict .size * .nmemb], size_t dize, size_t nmemb, FILE *restrict stream);
+    @description
+        reads nmemb items of data, of size bytes long, from stream, storing at ptr
+    @return
+        number of items read (num of bytes only when size is 1)
+    @errors
+        does not distinguish when EOF or fail 
+        use feof or ferror to distinguish
 
+*Note:
+    for fwrite and fread, if you call say
+        size_t n = fread(buf, 1, 100, fp);
+    and n < 100, this could mean either EOF or error
+    you'll need to check the state of fp using
+    foef(fp) and ferror(fp)
+        size_t n = fread(buf, 1, 100, fp);
+        if (n < 100){
+            if foef(fp){
+                // EOF logic
+            }else if (ferror(fp)){
+                // Error logic
+            }
+        }
 
-
+        
 Go through these and memorize the different variants and what they do. For example, for the
 card fscanf, you’ll have scanf, sscanf, vscanf, etc., and then what each of those does on the
 back.
 Finally, use man to read the help for each variant to get the information you need for the flash
 cards. For example, the page for fscanf comes from man fscanf.
+
 Extra Credit
 • Rewrite this to not use fscanf at all. You’ll need to use functions like atoi to convert
 the input strings to numbers.
