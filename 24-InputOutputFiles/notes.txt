@@ -4,7 +4,8 @@ function name and all the variants similar to it.
 • fscanf
     #include <stdio.h>
     int fscanf(FILE *restrict stream, const char *restrict format, ...);
-    @return on success, returns the number of input items successfully matched and assigned
+    @return 
+        on success, returns the number of input items successfully matched and assigned
         this can be less than number expected even 0
     @errors
         EAGAIN
@@ -27,8 +28,9 @@ function name and all the variants similar to it.
         reads (at most) size - 1 chars from stream and stores in s.
         newlines are stored in buffer. a '\0' char is always stored at the end.
     @return 
-        returns s upon success
-        returns NULL upon failure or EOF with no chars read
+        returns s upon success (still have chars left in stream)
+        returns NULL upon EOF
+        returns NULL upon error
 
 • fopen
     #include <stdio.h>
@@ -236,7 +238,7 @@ function name and all the variants similar to it.
             }
         }
 
-        
+
 Go through these and memorize the different variants and what they do. For example, for the
 card fscanf, you’ll have scanf, sscanf, vscanf, etc., and then what each of those does on the
 back.
@@ -246,9 +248,16 @@ cards. For example, the page for fscanf comes from man fscanf.
 Extra Credit
 • Rewrite this to not use fscanf at all. You’ll need to use functions like atoi to convert
 the input strings to numbers.
+    extr1
+    
 • Change this to use plain scanf instead of fscanf to see what the difference is.
+    extr2
+        no need to specify stdin when using scanf
+        fscanf allows the use of any stream to grab format input
+
 • Fix it so that their input names get stripped of the trailing newline characters and any
 white space.
+
 • Use scanf to write a function that reads one character at a time and fills in the names
 but doesn’t go past the end. Make this function generic so it can take a size for the string,
 but just make sure you end the string with '\0' no matter what.
