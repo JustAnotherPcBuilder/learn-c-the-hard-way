@@ -32,7 +32,7 @@ char *read_1_char_at_a_time(char *buffer, int size){
     memset(buffer, '\0', size); 
 
     // Keep reading until either end of file or buffer is reached
-    while ( scanf("%c", &ch) != EOF && len < size - 1 && ch != '\n'){
+    while ( scanf("%c", &ch) == 1 && len < size - 1 && ch != '\n'){
         buffer[len] = ch;
         len++;
     }
@@ -79,8 +79,8 @@ int main (int argc, char *argv[])
 
     printf("----- RESULTS -----\n");
 
-    printf("First Name: %s", you.first_name);
-    printf("Last Name: %s", you.last_name);
+    printf("First Name: %s\n", you.first_name);
+    printf("Last Name: %s\n", you.last_name);
     printf("Age: %d\n", you.age);
     printf("Eyes: %s\n", EYE_COLOR_NAMES[you.eyes]);
     printf("Income: %f\n", you.income);
