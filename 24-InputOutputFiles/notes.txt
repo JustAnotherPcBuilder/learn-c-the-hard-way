@@ -2,13 +2,58 @@ The I/O Functions
 This is a short list of various I/O functions that you should look up. Create flash cards that have the
 function name and all the variants similar to it.
 • fscanf
+    #include <stdio.h>
+    int fscanf(FILE *restrict stream, const char *restrict format, ...);
+    @return on success, returns the number of input items successfully matched and assigned
+        this can be less than number expected even 0
+    @errors
+        EAGAIN
+            The fd is marked non-blocking, but the read op is blocking
+        EBADF
+            The fd is invalid or not open for reading
+        EILSEQ
+            Input byte sequence is invalid character
+        EINTR
+            Read op intrrupted by signal
+        EINVAL
+            Not enough arguments or format is NULL
+        ENOMEM 
+            Out of memory
+
 • fgets
+    #include <stdio.h>
+    char *fgets(char s[restrict .size], int size, FILE *restrict stream);
+    @description 
+        reads (at most) size - 1 chars from stream and stores in s.
+        newlines are stored in buffer. a '\0' char is always stored at the end.
+    @return 
+        returns s upon success
+        returns NULL upon failure or EOF with no chars read
+
 • fopen
+    #include <stdio.h>
+    FILE *fopen(const char *restrict pathname, const char *restrict mode);
+    @description
+        opens the file whose name is pointed by the pathname and associates a stream to that file
+        modes:
+            r: open text file for reading; stream points to start of file
+            r+: open for reading and writing; stream points to start of file
+            w: create new file/make file 0 length; stream points to start of file
+            w+: same as w, except now can read as well.
+            a: opened for appending (writing at EOF); stream points to EOF
+            a+:j same as a, but now can read as well.
+            b: can be added anywhere to mode for binary mode; posix ignores this, but some systems
+                require a distinction between text and binary read/write mode; use for compatibility
+        ERRORS:
+            EINVAL:
+                The mode provided was invalid
+            Any other errors that may occur from:
+                malloc
+                open
+
 • freopen
 • fdopen
 • fclose
-From the Library of Pankaj R Doharey
-130 LEARN C THE HARD WAY
 • fcloseall
 • fgetpos
 • fseek
@@ -17,6 +62,9 @@ From the Library of Pankaj R Doharey
 • fprintf
 • fwrite
 • fread
+
+
+
 Go through these and memorize the different variants and what they do. For example, for the
 card fscanf, you’ll have scanf, sscanf, vscanf, etc., and then what each of those does on the
 back.
