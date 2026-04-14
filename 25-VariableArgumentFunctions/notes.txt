@@ -1,0 +1,16 @@
+How to Break It
+This program should be more robust against buffer overflows, but it doesn’t handle the formatted
+input as well as scanf. To try to break this, change the code so that you forget to pass in the initial
+size for ‘%s’ formats. Try giving it more data than MAX_DATA, and then see how omitting calloc
+in read_string changes how it works. Finally, there’s a problem where fgets eats the newlines,
+so try to fix that using fgetc, but leave out the \0 that ends the string.
+
+Extra Credit
+• Make double and triple sure that you know what each of the out_ variables is doing. Most
+importantly, you should know what out_string is and how it’s a pointer to a pointer,
+so that you understand when you’re setting the pointer versus the contents is important.
+• Write a similar function to printf that uses the varargs system, and rewrite main to
+use it.
+• As usual, read the man page on all of this so that you know what it does on your platform.
+Some platforms will use macros, others will use functions, and some will have these do
+nothing. It all depends on the compiler and the platform you use.
