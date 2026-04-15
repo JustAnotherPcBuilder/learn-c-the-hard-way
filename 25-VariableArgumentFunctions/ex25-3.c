@@ -8,10 +8,17 @@
 int read_string(char **out_string, int max_buffer)
 {
     *out_string = calloc(1, max_buffer + 1);
-    check_mem(*out_string);
-    char *result = fgets(*out_string, max_buffer, stdin);
-    check(result != NULL, "Input eror.");
-
+    char *result = *out_string;
+    check_mem(result);
+    int ch;
+    int i = 0;
+    while ((ch = fgetc(stdin)) != EOF && i < max_buffer){
+        result[i] = (char) ch;
+        i++;
+    } 
+    check(result != NULL, "Input error.");
+    // Without this, stdin would remain in EOF and cannot utilize fget anymore
+    clearerr(stdin);
     return 0;
 error:
     if(*out_string) free(*out_string);
@@ -75,6 +82,7 @@ int read_scan(const char *fmt, ...)
             fgetc(stdin);
         }
         check(!feof(stdin) && !ferror(stdin), "Input error.");
+        // check(!ferror(stdin), "Input error.");
     }
 
     va_end(argp);

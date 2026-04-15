@@ -3,33 +3,40 @@ This program should be more robust against buffer overflows, but it doesn’t ha
 input as well as scanf. 
 
 1. To try to break this, change the code so that you forget to pass in the initial
-size for ‘%s’ formats. 
-    segmentation fault....
-        case 's':
-            max_buffer = va_arg(argp, int);
-            out_string = va_arg(argp, char **);
-            rc = read_string(out_string, max_buffer);
-            check(rc == 0, "Failed to read string.");
-            break;
-    When string is used, this case will try to read an int for max_buffer; it DNE
-    *from man pages: when arg DNE and va_arg is called, random errors will occur
-    This specific instance causes max_buffer to go to -9104 and crash calloc
+   size for ‘%s’ formats. 
+        segmentation fault....
+            case 's':
+                max_buffer = va_arg(argp, int);
+                out_string = va_arg(argp, char **);
+                rc = read_string(out_string, max_buffer);
+                check(rc == 0, "Failed to read string.");
+                break;
+        When string is used, this case will try to read an int for max_buffer; it DNE
+        *from man pages: when arg DNE and va_arg is called, random errors will occur
+        This specific instance causes max_buffer to go to -9104 and crash calloc
 
 2. Try giving it more data than MAX_DATA, and then see how omitting calloc
-in read_string changes how it works. 
-    Giving more data than MAX_DATA causes this program to skip the next questions and use the
-    remaining chars in stdin as the answers.
-    Probably should just strip/remove the remanining chars in stdin buffer when unused or 
-    trigger an error to retype the answers if overbuffer (design decision)
+   in read_string changes how it works. 
+        Giving more data than MAX_DATA causes this program to skip the next questions and use the
+        remaining chars in stdin as the answers.
+        Probably should just strip/remove the remanining chars in stdin buffer when unused or 
+        trigger an error to retype the answers if overbuffer (design decision)
 
-    This automatically happens in Initial; this seems like a bug which prevents the 
-    prompt for last name if initial is long enough.
+        This automatically happens in Initial; this seems like a bug which prevents the 
+        prompt for last name if initial is long enough.
 
 
-    Omitting calloc breaks the program because there is no allocated memory for out_string buffer
+        Omitting calloc breaks the program because there is no allocated memory for out_string buffer
 
 3. Finally, there’s a problem where fgets eats the newlines,
-so try to fix that using fgetc, but leave out the \0 that ends the string.
+   so try to fix that using fgetc, but leave out the \0 that ends the string.
+        Note: By "Eats the newlines," Zed means that in the program, you cannot enter
+        multi-line strings because the terminal treats newlines as input operations.
+        Here he wants you to rewrite this such that you can enter multi-line strings.
+
+        stdin and terminal interaction is weird. ctrl-d seems to place stdin in a EOF state
+        using clearerr(stdin) seems to fix the issue and proceed as expected.
+
 
 Extra Credit
 • Make double and triple sure that you know what each of the out_ variables is doing. Most
