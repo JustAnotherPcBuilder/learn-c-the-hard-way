@@ -36,16 +36,34 @@ error:
 
 int write_int(int out_int)
 {
-    char buffer[MAX_DATA];
-    for (int i = 0; i < MAX_DATA; i++){
-        buffer[i] = 0;
-    }
-    if (out_int < 0){
-        buffer[0] = '-';
+    if (out_int == 0){
+        fputc('0', stdout);
+        return 0;
     }
 
-    // Find multiples and assign char to value
-    
+    int buffer[MAX_DATA];
+    int i;
+    for (i = 0; i < MAX_DATA; i++){
+        buffer[i] = 0;
+    }
+
+    if(out_int < 0){
+        fputc('-', stdout);
+        out_int = -out_int;
+    }
+
+    // Use modulus to get remainder and find the digits from right to left
+    for(i = 0; out_int > 0; i++){
+        buffer[i] = out_int % 10;
+        out_int -= buffer[i];
+        out_int /= 10;
+    }
+    // Need to reverse the operation to print properly (left to right)
+    for (i -= 1; i >=0; i--){
+        fputc((char) (buffer[i] + ASCII_OFFSET), stdout);
+    }
+
+    return 0;
 }
 
 int write_string(const char *out_string, int size)
