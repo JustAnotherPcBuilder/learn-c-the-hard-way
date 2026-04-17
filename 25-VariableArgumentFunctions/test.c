@@ -19,37 +19,31 @@ int write_int(int out_int)
         buffer[i] = 0;
     }
 
-    int max = out_int;
-    if(max < 0){
+    if(out_int < 0){
         fputc('-', stdout);
-        max = -max;
+        out_int = -out_int;
     }
 
-    int current = max;
-
-    // Find multiples and assign char to value
-    for(i = 0; current > 0; i++){
-        int remainder = current % 10;
-        current -= remainder;
-        current /= 10;
-        buffer[i] = remainder + ASCII_OFFSET;
+    // Use modulus to get remainder and find the digits from right to left
+    for(i = 0; out_int > 0; i++){
+        buffer[i] = out_int % 10;
+        out_int -= buffer[i];
+        out_int /= 10;
     }
-
-
+    // Need to reverse the operation to print properly (left to right)
     for (i -= 1; i >=0; i--){
-        fputc((char) buffer[i], stdout);
+        fputc((char) (buffer[i] + ASCII_OFFSET), stdout);
     }
-    
 
     return 0;
 }
 
-int write_string(const char *out_string, int size)
-{
-    return 0;
-error:
-    return -1;
-}
+// int write_string(const char *out_string, int size)
+// {
+//     return 0;
+// error:
+//     return -1;
+// }
 
 // int write_print(const char *fmt, ...){
 //     int i = 0;
@@ -107,7 +101,7 @@ int main(int argc, char *argv[])
 {
     int test[] = {0, -101, 34524, 12042, -93845, 93934};
     
-    for ( int i = 0; i < 6; i++){
+    for (int i = 0; i < 6; i++){
         fputs("Test ", stdout);
         write_int(i);
         fputs(": ", stdout);
@@ -116,6 +110,5 @@ int main(int argc, char *argv[])
     }
     
     return 0;
-error:
-    return -1;
+
 }
