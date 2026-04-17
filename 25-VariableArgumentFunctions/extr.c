@@ -8,17 +8,10 @@
 int read_string(char **out_string, int max_buffer)
 {
     *out_string = calloc(1, max_buffer + 1);
-    char *result = *out_string;
-    check_mem(result);
-    int ch;
-    int i = 0;
-    while ((ch = fgetc(stdin)) != EOF && i < max_buffer){
-        result[i] = (char) ch;
-        i++;
-    } 
-    check(result != NULL, "Input error.");
-    // Without this, stdin would remain in EOF and cannot utilize fget anymore
-    clearerr(stdin);
+    check_mem(*out_string);
+    char *result = fgets(*out_string, max_buffer, stdin);
+    check(result != NULL, "Input eror.");
+
     return 0;
 error:
     if(*out_string) free(*out_string);
@@ -38,6 +31,77 @@ int read_int(int *out_int)
 
 error:
     if(input) free(input);
+    return -1;
+}
+
+int write_int(int out_int)
+{
+    char buffer[MAX_DATA];
+    for (int i = 0; i < MAX_DATA; i++){
+        buffer[i] = 0;
+    }
+    if (out_int < 0){
+        buffer[0] = '-';
+    }
+
+    // Find multiples and assign char to value
+    
+}
+
+int write_string(const char *out_string, int size)
+{
+
+}
+
+int write_print(const char *fmt, ...){
+    int i = 0;
+    int rc = 0;
+    int out_int = 0;
+    char out_char = NULL;
+    char *out_string = NULL;
+    int max_buffer = 0;
+
+    va_list argp;
+    va_start(argp, fmt);
+
+    for(i = 0; fmt[i] != '\0'; i++){
+        if (fmt[i] == '%'){
+            i++;
+            switch(fmt[i]){
+                case '\0':
+                    sentinel("Invalid format, you ended with %%.");
+                    break;
+                case 'd':
+                    out_int = va_arg(argp, int);
+                    rc = write_int(out_int);
+                    check(rc == 0, "Failed to write int.");
+                    break;
+                case 'c':
+                    out_char = va_arg(argp, char);
+                    rc = fputc(out_char, stdout);
+                    check(rc == 0, "Failed to write char.");
+                    break;
+                case 's':
+                    max_buffer = va_arg(argp, int);
+                    out_string = va_arg(argp, char *);
+                    rc = write_string(out_string, max_buffer);
+                    check(rc == 0, "Failed to write string.");
+                    break;
+                default:
+                    sentinel("Invalid format.");
+            }  
+        }else {
+            fputc(fmt[i], stdout);
+        }
+        check(!ferror(stdout), "Output error.");
+        // check(!feof(stdin) && !ferror(stdin), "Input error.");
+        // check(!ferror(stdin), "Input error.");
+    }
+
+    va_end(argp);
+    return 0;
+error:
+    va_end(argp);
     return -1;
 }
 
@@ -82,7 +146,6 @@ int read_scan(const char *fmt, ...)
             fgetc(stdin);
         }
         check(!feof(stdin) && !ferror(stdin), "Input error.");
-        // check(!ferror(stdin), "Input error.");
     }
 
     va_end(argp);
@@ -91,7 +154,6 @@ error:
     va_end(argp);
     return -1;
 }
-
 
 int main(int argc, char *argv[])
 {

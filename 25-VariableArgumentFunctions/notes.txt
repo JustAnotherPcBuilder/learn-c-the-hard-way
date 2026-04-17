@@ -42,8 +42,30 @@ Extra Credit
 • Make double and triple sure that you know what each of the out_ variables is doing. Most
 importantly, you should know what out_string is and how it’s a pointer to a pointer,
 so that you understand when you’re setting the pointer versus the contents is important.
+    int *out_int: pointer to an int
+    char *out_char: pointer to a char
+    char **out_string: pointer to a char pointer
+
+    the read_scan function will need to set the variables sent through them
+    *because functions pass by value, a copy is created of the original value that is sent
+    *this means that changing the value in the function itself will NOT change the original var
+    *this is because it is a copy, not the original var
+    *the only way around this is to pass by reference
+        *passing by reference means passing the address of the variable you want to copy:
+            -ie passing a pointer to that value
+            -pointers to variables will access the address, thereby accessing the original var
+            -this is the only way to alter variables outside the function scope
+        the out_char variables are all pointers to specific types which are to be read from stdin
+        (int, char, string) so each will requires a corresponding pointer (int *, char *, char **)
+
+        this allows the usage of external variables in the read_scan function, but requires the addr
+        read_scan("%d", &age); read_scan("%c", &initial), read_scan("%s", &name)
+        now the function can input the appropriate info to the variable and more than 1 can be used
+
+
 • Write a similar function to printf that uses the varargs system, and rewrite main to
 use it.
+
 • As usual, read the man page on all of this so that you know what it does on your platform.
 Some platforms will use macros, others will use functions, and some will have these do
 nothing. It all depends on the compiler and the platform you use.
