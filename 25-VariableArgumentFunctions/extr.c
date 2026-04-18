@@ -4,6 +4,7 @@
 #include "dbg.h"
 
 #define MAX_DATA 100
+#define ASCII_OFFSET 48
 
 int read_string(char **out_string, int max_buffer)
 {
@@ -38,6 +39,7 @@ int write_int(int out_int)
 {
     if (out_int == 0){
         fputc('0', stdout);
+        check(!ferror(stdout), "Output Error.");
         return 0;
     }
 
@@ -50,6 +52,7 @@ int write_int(int out_int)
     if(out_int < 0){
         fputc('-', stdout);
         out_int = -out_int;
+        check(!ferror(stdout), "Output Error.");
     }
 
     // Use modulus to get remainder and find the digits from right to left
@@ -62,20 +65,32 @@ int write_int(int out_int)
     for (i -= 1; i >=0; i--){
         fputc((char) (buffer[i] + ASCII_OFFSET), stdout);
     }
-
+    check(!ferror(stdout), "Output Error.");
     return 0;
+
+error:
+    return -1;
 }
 
 int write_string(const char *out_string, int size)
 {
+    check(size >= 0, "Invalid size.");
+    
+    for(int i = 0; i < size; i++){
+        fputc(out_string[i], stdout);
+    }
+    check(!ferror(stdout), "Output Error.");
 
+    return 0;
+error:
+    return -1;
 }
 
 int write_print(const char *fmt, ...){
     int i = 0;
     int rc = 0;
     int out_int = 0;
-    char out_char = NULL;
+    char out_char;
     char *out_string = NULL;
     int max_buffer = 0;
 
@@ -95,7 +110,7 @@ int write_print(const char *fmt, ...){
                     check(rc == 0, "Failed to write int.");
                     break;
                 case 'c':
-                    out_char = va_arg(argp, char);
+                    out_char = (char) va_arg(argp, int);
                     rc = fputc(out_char, stdout);
                     check(rc == 0, "Failed to write char.");
                     break;
