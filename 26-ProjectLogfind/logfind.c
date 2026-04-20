@@ -12,7 +12,6 @@ checks all locations spedified in ~/.logfind and returns all matching patterns
 #include <stdio.h>
 #include <glob.h>
 
-
 int main(int argc, char **argv)
 {
     return 0;

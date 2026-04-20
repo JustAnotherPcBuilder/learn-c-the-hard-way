@@ -1,1 +1,33 @@
-logfind
+Notes
+1. Argument parsing
+    Each argument will be a keyword that will be searched for in the file using 'and' logic
+    if the -o option is given, then the arguments will be 'or' logic instead of 'and' logic
+    *questions/concerns:
+        a. can you have both 'and' and 'or' logic?
+            ./logfind pat1 pat2 -o pat3
+            ./logfind pat1 -o pat2 pat3
+            ./logfind -o pat1 pat2 pat3
+        b.  argument sanitizing? prevent commands/non-alpha numeric chars in argument?
+   
+2. Path Search
+    Search will start @ current run directory
+    *questions
+        a. if added to PATH env, would it then take the run path as the path to search?
+        b. can it search through all dirs recursively?
+        c. if it encounters dirs with no read access, should it throw errors, ignore, or term?
+    
+3. File Search
+    Once a list of files has been obtained, the program will scan through the files and 
+    search for the keywords. 
+    a. Need track logic to keep track of keyword
+    b. scan/iterate through files one line at a time
+    c. can improve speed by multi-threading
+            i. Find file size
+            ii. Divide and conquer - up to N number of threads to div up the file size start to finish
+                    1. How do files keep track of size?
+                    2. Do they also track of other info (Newlines?)
+                    3. Can files have different txt format? ascii, utf-8, utf-16, unicode, etc?
+                    4. Should this program handle all diff formats if possible?
+                    5. How to tell what format the file has to ignore any with 'unsupported' formats?
+                    6. How to keep multi threads from accessing the same memory location and crashing?
+                        each keeps a binary bit for each keyword? 'or' the result to get a total for file? saves mem size + memory location
