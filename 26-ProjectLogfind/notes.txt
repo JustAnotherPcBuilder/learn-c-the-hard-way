@@ -1,4 +1,57 @@
-Notes
+---glob notes---
+
+#include <glob.h>
+
+typedef struct{
+    size_t gl_pathc; // count of total path so far
+    int gl_matchc;   // count of paths matching pattern
+    size_t gl_offs;  // reserved at beginnnig of gl_pathv
+    int gl_flags;    // returned flags
+    char **gl_pathv; // list of paths matching pattern
+} glob_t;
+
+int glob(const char *restrict pattern, int flags, 
+        int (*errfunc)(const char *epath, int errno), glot_t *restrict pglob);
+
+@description
+    pathname generator that uses file name pattern matching used by shell
+@arguments
+    pattern
+        pointer to a pathname pattern to be expanded
+    flags
+        GLOB_APPEND
+            append pathnames to ones from previous call
+        GLOB_DOOFFS
+            null pointer?
+        GLOB_ERR
+            return when encounters dir w/o r/w priv
+        GLOB_MARK
+            dirs returned will end with slash
+        GLOB_NOCHECK
+            returns a list of only the pattern if no matches are found
+            num of matched paths is set to 0
+        GLOB_NOESCAPE
+            prevents backslash escaping in pattern
+        GLOB_NOSORT
+            default sorts pathnames
+            this option prevents sorting
+    ---following are non-standard---
+        GLOB_ALTDIRFUNC
+            
+        GLOB_BRACE
+            pre-process {pat,pat,pat,...}
+            default is left unexpanded
+        GLOB_MAGCHAR
+            set by glob if globbing chars used (*?[])
+        GLOB_NOMAGIC
+            same as GLOB_NOCHECK, but does not add pattern if magic chars used (*?[])
+        GLOB_TILDE
+            expand ~ with home dir
+        GLOB_LIMIT
+
+-----------
+logfind Notes
+
 1. Argument parsing
     Each argument will be a keyword that will be searched for in the file using 'and' logic
     if the -o option is given, then the arguments will be 'or' logic instead of 'and' logic
